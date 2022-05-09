@@ -21,11 +21,7 @@ async function run() {
     try {
         await client.connect()
         const BooksCollection = client.db('BOOKory').collection('books')
-
-
-
-
-
+ 
         app.get('/books' , async(req, res)=>{
              const query = {}
              const cursor = BooksCollection.find(query)
