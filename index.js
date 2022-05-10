@@ -23,6 +23,7 @@ async function run() {
     try {
         await client.connect()
         const BooksCollection = client.db('BOOKory').collection('books')
+        const Blogs = client.db('BOOKory').collection('blogs')
 
 
         // show all items
@@ -82,6 +83,22 @@ async function run() {
             console.log(query)
             const result = await BooksCollection.deleteOne(query)
             res.send(result)
+        })
+
+//post a blog
+        app.post('/blogs', async (req, res) => {
+            const newBlog= req.body
+            console.log('adding new blog', newBlog);
+            const result = await Blogs.insertOne(newBlog)
+            res.send(result)
+        })
+
+        //read a blog
+        app.get('/blogs', async (req, res) => {
+            const query = {}
+            const cursor = Blogs.find(query)
+            const blogs = await cursor.toArray()
+            res.send(blogs)
         })
 
     }
