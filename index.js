@@ -63,11 +63,11 @@ async function run() {
             const updatedDoc = {
                 $set: {
                     quantity: updatedItem.quantity
-                    
+
                 }
 
             }
-            const result =  await BooksCollection.updateOne(filter, updatedDoc, options)
+            const result = await BooksCollection.updateOne(filter, updatedDoc, options)
             res.send(result)
 
 
@@ -85,9 +85,9 @@ async function run() {
             res.send(result)
         })
 
-//post a blog
+        //post a blog
         app.post('/blogs', async (req, res) => {
-            const newBlog= req.body
+            const newBlog = req.body
             console.log('adding new blog', newBlog);
             const result = await Blogs.insertOne(newBlog)
             res.send(result)
