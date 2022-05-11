@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config()
+const jwt = require('jsonwebtoken');
 const port = process.env.PORT || 5000
 const app = express()
 const { MongoClient, ServerApiVersion } = require('mongodb');
@@ -45,6 +46,7 @@ async function run() {
             res.send(result)
 
         })
+  
 
         // post a new item
         app.post('/books', async (req, res) => {
@@ -100,6 +102,18 @@ async function run() {
             const blogs = await cursor.toArray()
             res.send(blogs)
         })
+
+
+        // auth (jwt)
+        app.post('/login', async(req, res) =>{
+            const user = req.body 
+            const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECREATE 
+            )
+                res.send({token})  
+        })
+
+
+        // get items by mail
 
     }
     finally {
