@@ -34,6 +34,24 @@ async function run() {
             
 
         })
+
+
+
+        // function for verify jwt
+        const verifyJWT = (req , res, next) => {
+            const authHeader = req.headers.authorization
+            if(!authHeader){
+                return res.status(401).send({messege: 'un authorozied access'})
+            }
+            const token = authHeader.split(' ')[1]
+            jwt.verify(token, process.env.ACCESS_TOKEN_SECREATE , (err, decoded) =>{
+                if (err){
+                    res.status(403).send({messege: 'forbidden access'})
+                }
+                req.decoded = decoded
+            })
+
+        }
         
 
 
@@ -57,13 +75,22 @@ async function run() {
 
         })
         // show item by email
-        app.get(`/books/:email`, async (req, res) => {
+        app.get(`/books/:email`, verifyJWT, async (req, res) => {
+            const decodedEmail = req.decoded.email
+            console.log(decodedEmail)
+          
             const email = req.params.email
-            console.log(email);
-            const query = {email}
+            if (email == decodedEmail){
+                 const query = {email}
             const cursor = BooksCollection.find(query)
             const result = await cursor.toArray()
             res.send(result)
+            }
+            else{
+                res.status(403).send({messege: 'forbidden access'})
+            }
+        
+           
 
         })
 
