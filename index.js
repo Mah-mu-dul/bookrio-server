@@ -27,8 +27,19 @@ async function run() {
         const Blogs = client.db('BOOKory').collection('blogs')
 
 
+
+        app.post('http://localhost:5000/myitems', (req, res) =>{
+            const email = req.email
+            console.log(email);
+            
+
+        })
+        
+
+
         // show all items
         app.get('/books', async (req, res) => {
+            const email = req?.query?.email?.split(' ')[0]
             const query = {}
             const cursor = BooksCollection.find(query)
             const books = await cursor.toArray()
@@ -38,15 +49,24 @@ async function run() {
         // show one item
         app.get('/book/:id', async (req, res) => {
             const id = req.params.id
-
             const query = { _id: ObjectId(id) }
-            console.log(query)
+            // console.log(query)
             const result = await BooksCollection.findOne(query)
 
             res.send(result)
 
         })
-  
+        // show item by email
+        app.get(`/books/:email`, async (req, res) => {
+            const email = req.params.email
+            console.log(email);
+            const query = {email}
+            const cursor = BooksCollection.find(query)
+            const result = await cursor.toArray()
+            res.send(result)
+
+        })
+
 
         // post a new item
         app.post('/books', async (req, res) => {
@@ -105,11 +125,11 @@ async function run() {
 
 
         // auth (jwt)
-        app.post('/login', async(req, res) =>{
-            const user = req.body 
-            const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECREATE 
+        app.post('/login', async (req, res) => {
+            const user = req.body
+            const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECREATE
             )
-                res.send({token})  
+            res.send({ token })
         })
 
 
