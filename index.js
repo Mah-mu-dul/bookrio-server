@@ -41,7 +41,7 @@ async function run() {
             const token = authHeader?.split(' ')[1]
             jwt.verify(token, process.env.ACCESS_TOKEN_SECREATE, (err, decoded) => {
                 if (err) {
-                    return res.status(403).send({ messege: 'forbidden access' })
+                    return res.status(403).send({ messege: 'access forbidden ' })
                 }
                 req.decoded = decoded
             })
@@ -76,11 +76,18 @@ async function run() {
             console.log(decodedEmail)
 
             const email = req.params.email
+            console.log(email)
+            console.log(decodedEmail);
 
-            const query = { email }
-            const cursor = BooksCollection.find(query)
-            const result = await cursor.toArray()
-            res.send(result)
+            if(email === decodedEmail){
+                const query = { email }
+                const cursor = BooksCollection.find(query)
+                const result = await cursor.toArray()
+                res.send(result)
+            }
+            else{
+                return res.send('email dosent match')
+            }
 
 
         
